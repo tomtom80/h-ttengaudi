@@ -15,30 +15,30 @@ public class TenantProvisioningService {
     private final PasswordService passwordService;
 
     public Tenant provisionTenant(
-        String aTenantName,
-        String aTenantDescription,
-        FullName anAdministorName,
-        EmailAddress anEmailAddress,
-        PostalAddress aPostalAddress,
-        Telephone aPrimaryTelephone,
-        Telephone aSecondaryTelephone) {
+        String tenantName,
+        String tenantDescription,
+        FullName administratorName,
+        EmailAddress emailAddress,
+        PostalAddress postalAddress,
+        Telephone primaryTelephone,
+        Telephone secondaryTelephone) {
 
         try {
             Tenant tenant = new Tenant(
                 this.tenantRepository.nextIdentity(),
-                aTenantName,
-                aTenantDescription,
+                tenantName,
+                tenantDescription,
                 true); // must be active to register admin
 
             this.tenantRepository.add(tenant);
 
             this.registerAdministratorFor(
                 tenant,
-                anAdministorName,
-                anEmailAddress,
-                aPostalAddress,
-                aPrimaryTelephone,
-                aSecondaryTelephone);
+                administratorName,
+                emailAddress,
+                postalAddress,
+                primaryTelephone,
+                secondaryTelephone);
 
             DomainEventPublisher
                 .instance()
@@ -47,51 +47,51 @@ public class TenantProvisioningService {
 
             return tenant;
 
-        } catch (Throwable t) {
+        } catch (Exception e) {
             throw new IllegalStateException(
                 "Cannot provision tenant because: "
-                    + t.getMessage());
+                    + e.getMessage());
         }
     }
 
     private void registerAdministratorFor(
-        Tenant aTenant,
-        FullName anAdministorName,
-        EmailAddress anEmailAddress,
-        PostalAddress aPostalAddress,
-        Telephone aPrimaryTelephone,
-        Telephone aSecondaryTelephone) {
+        Tenant tenant,
+        FullName administratorName,
+        EmailAddress emailAddress,
+        PostalAddress postalAddress,
+        Telephone primaryTelephone,
+        Telephone secondaryTelephone) {
 
         RegistrationInvitation invitation =
-            aTenant.offerRegistrationInvitation("init").openEnded();
+            tenant.offerRegistrationInvitation("init").openEnded();
 
         String strongPassword =
             passwordService
                 .generateStrongPassword();
 
         User admin =
-            aTenant.registerUser(
+            tenant.registerUser(
                 invitation.invitationId(),
                 "admin",
                 strongPassword,
-                Enablement.indefiniteEnablement(),
+                Activation.indefiniteActivation(),
                 new Person(
-                    aTenant.tenantId(),
-                    anAdministorName,
+                    tenant.tenantId(),
+                    administratorName,
                     new ContactInformation(
-                        anEmailAddress,
-                        aPostalAddress,
-                        aPrimaryTelephone,
-                        aSecondaryTelephone)));
+                        emailAddress,
+                        postalAddress,
+                        primaryTelephone,
+                        secondaryTelephone)));
 
-        aTenant.withdrawInvitation(invitation.invitationId());
+        tenant.withdrawInvitation(invitation.invitationId().id());
 
         this.userRepository.add(admin);
 
         Role adminRole =
-            aTenant.provisionRole(
+            tenant.provisionRole(
                 "Administrator",
-                "Default " + aTenant.name() + " administrator.");
+                "Default " + tenant.name() + " administrator.");
 
         adminRole.assignUser(admin);
 
@@ -99,10 +99,10 @@ public class TenantProvisioningService {
 
         DomainEventPublisher.instance().publish(
             new TenantAdministratorRegistered(
-                aTenant.tenantId(),
-                aTenant.name(),
-                anAdministorName,
-                anEmailAddress,
+                tenant.tenantId(),
+                tenant.name(),
+                administratorName,
+                emailAddress,
                 admin.username(),
                 strongPassword));
     }

@@ -4,30 +4,30 @@ import java.time.Instant;
 
 import de.klingbeil.hutparty.domain.model.DomainEvent;
 
-public class PersonContactInformationChanged implements DomainEvent {
+public class UserActivationChanged implements DomainEvent {
 
-    private final ContactInformation contactInformation;
+    private final Activation activation;
     private final int eventVersion;
     private final Instant occurredOn;
     private final TenantId tenantId;
     private final String username;
 
-    public PersonContactInformationChanged(
+    public UserActivationChanged(
         TenantId tenantId,
         String username,
-        ContactInformation contactInformation) {
+        Activation activation) {
 
         super();
 
-        this.contactInformation = contactInformation;
+        this.activation = activation;
         this.eventVersion = 1;
         this.occurredOn = Instant.now();
         this.tenantId = tenantId;
         this.username = username;
     }
 
-    public ContactInformation contactInformation() {
-        return this.contactInformation;
+    public Activation activation() {
+        return this.activation;
     }
 
     @Override

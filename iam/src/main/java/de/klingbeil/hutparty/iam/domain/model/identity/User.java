@@ -1,46 +1,49 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
 
+import java.io.Serial;
+
 import de.klingbeil.hutparty.domain.model.ConcurrencySafeEntity;
 import de.klingbeil.hutparty.domain.model.DomainEventPublisher;
 import de.klingbeil.hutparty.iam.domain.model.DomainRegistry;
 
 public class User extends ConcurrencySafeEntity {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    private Enablement enablement;
+    private Activation activation;
     private String password;
     private Person person;
     private TenantId tenantId;
     private String username;
 
-    public void changePassword(String aCurrentPassword, String aChangedPassword) {
-        this.assertArgumentNotEmpty(aCurrentPassword, "Current and new password must be provided.");
+    public void changePassword(String currentPassword, String changedPassword) {
+        this.assertArgumentNotEmpty(currentPassword, "Current and new password must be provided.");
 
-        this.assertArgumentEquals(this.password(), this.asEncryptedValue(aCurrentPassword), "Current password not confirmed.");
+        this.assertArgumentEquals(this.password(), this.asEncryptedValue(currentPassword), "Current password not confirmed.");
 
-        this.protectPassword(aCurrentPassword, aChangedPassword);
+        this.protectPassword(currentPassword, changedPassword);
 
         DomainEventPublisher.instance().publish(new UserPasswordChanged(this.tenantId(), this.username()));
     }
 
-    public void changePersonalContactInformation(ContactInformation aContactInformation) {
-        this.person().changeContactInformation(aContactInformation);
+    public void changePersonalContactInformation(ContactInformation contactInformation) {
+        this.person().changeContactInformation(contactInformation);
     }
 
-    public void changePersonalName(FullName aPersonalName) {
-        this.person().changeName(aPersonalName);
+    public void changePersonalName(FullName personalName) {
+        this.person().changeName(personalName);
     }
 
-    public void defineEnablement(Enablement anEnablement) {
-        this.setEnablement(anEnablement);
+    public void defineActivation(Activation activation) {
+        this.setActivation(activation);
 
-        DomainEventPublisher.instance().publish(new UserEnablementChanged(this.tenantId(), this.username(), this.enablement()));
+        DomainEventPublisher.instance().publish(new UserActivationChanged(this.tenantId(), this.username(), this.activation()));
     }
 
     public boolean isEnabled() {
-        return this.enablement().isEnablementEnabled();
+        return this.activation().isActivationEnabled();
     }
 
     public Person person() {
@@ -74,58 +77,58 @@ public class User extends ConcurrencySafeEntity {
     @Override
     public int hashCode() {
 
-        return +(45217 * 269) + this.tenantId().hashCode() + this.username().hashCode();
+        return (45217 * 269) + this.tenantId().hashCode() + this.username().hashCode();
     }
 
     @Override
     public String toString() {
-        return "User [tenantId=" + tenantId + ", username=" + username + ", person=" + person + ", enablement=" + enablement + "]";
+        return "User [tenantId=" + tenantId + ", username=" + username + ", person=" + person + ", enablement=" + activation + "]";
     }
 
-    protected User(TenantId aTenantId, String aUsername, String aPassword, Enablement anEnablement, Person aPerson) {
+    protected User(TenantId tenantId, String username, String password, Activation activation, Person person) {
 
         this();
 
-        this.setEnablement(anEnablement);
-        this.setPerson(aPerson);
-        this.setTenantId(aTenantId);
-        this.setUsername(aUsername);
+        this.setActivation(activation);
+        this.setPerson(person);
+        this.setTenantId(tenantId);
+        this.setUsername(username);
 
-        this.protectPassword("", aPassword);
+        this.protectPassword("", password);
 
-        aPerson.internalOnlySetUser(this);
+        person.internalOnlySetUser(this);
 
-        DomainEventPublisher.instance().publish(new UserRegistered(this.tenantId(), aUsername, aPerson.name(), aPerson.contactInformation().emailAddress()));
+        DomainEventPublisher.instance().publish(new UserRegistered(this.tenantId(), username, person.name(), person.contactInformation().emailAddress()));
     }
 
     protected User() {
         super();
     }
 
-    protected String asEncryptedValue(String aPlainTextPassword) {
-        return DomainRegistry.encryptionService().encryptedValue(aPlainTextPassword);
+    protected String asEncryptedValue(String plainTextPassword) {
+        return DomainRegistry.encryptionService().encryptedValue(plainTextPassword);
     }
 
-    protected void assertPasswordsNotSame(String aCurrentPassword, String aChangedPassword) {
-        this.assertArgumentNotEquals(aCurrentPassword, aChangedPassword, "The password is unchanged.");
+    protected void assertPasswordsNotSame(String currentPassword, String changedPassword) {
+        this.assertArgumentNotEquals(currentPassword, changedPassword, "The password is unchanged.");
     }
 
     protected void assertPasswordNotWeak(String aPlainTextPassword) {
         this.assertArgumentFalse(DomainRegistry.passwordService().isWeak(aPlainTextPassword), "The password must be stronger.");
     }
 
-    protected void assertUsernamePasswordNotSame(String aPlainTextPassword) {
-        this.assertArgumentNotEquals(this.username(), aPlainTextPassword, "The username and password must not be the same.");
+    protected void assertUsernamePasswordNotSame(String plainTextPassword) {
+        this.assertArgumentNotEquals(this.username(), plainTextPassword, "The username and password must not be the same.");
     }
 
-    protected Enablement enablement() {
-        return this.enablement;
+    protected Activation activation() {
+        return this.activation;
     }
 
-    protected void setEnablement(Enablement anEnablement) {
-        this.assertArgumentNotNull(anEnablement, "The enablement is required.");
+    protected void setActivation(Activation activation) {
+        this.assertArgumentNotNull(activation, "The activation is required.");
 
-        this.enablement = anEnablement;
+        this.activation = activation;
     }
 
     public String internalAccessOnlyEncryptedPassword() {

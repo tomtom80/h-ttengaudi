@@ -1,17 +1,17 @@
 package de.klingbeil.hutparty.iam.domain.model.access;
 
-import java.util.Date;
+import java.time.Instant;
 
 import de.klingbeil.hutparty.domain.model.DomainEvent;
 import de.klingbeil.hutparty.iam.domain.model.identity.TenantId;
 
 public class UserUnassignedFromRole implements DomainEvent {
 
-    private int eventVersion;
-    private Date occurredOn;
-    private String roleName;
-    private TenantId tenantId;
-    private String username;
+    private final int eventVersion;
+    private final Instant occurredOn;
+    private final String roleName;
+    private final TenantId tenantId;
+    private final String username;
 
     public UserUnassignedFromRole(
         TenantId aTenantId,
@@ -21,7 +21,7 @@ public class UserUnassignedFromRole implements DomainEvent {
         super();
 
         this.eventVersion = 1;
-        this.occurredOn = new Date();
+        this.occurredOn = Instant.now();
         this.roleName = aRoleName;
         this.tenantId = aTenantId;
         this.username = aUsername;
@@ -33,7 +33,7 @@ public class UserUnassignedFromRole implements DomainEvent {
     }
 
     @Override
-    public Date occurredOn() {
+    public Instant occurredOn() {
         return this.occurredOn;
     }
 

@@ -1,25 +1,25 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
-import java.util.Date;
+import java.time.Instant;
 
 import de.klingbeil.hutparty.domain.model.DomainEvent;
 
 public class PersonNameChanged implements DomainEvent {
 
-    private int eventVersion;
-    private FullName name;
-    private Date occurredOn;
-    private TenantId tenantId;
-    private String username;
+    private final int eventVersion;
+    private final FullName name;
+    private final Instant occurredOn;
+    private final TenantId tenantId;
+    private final String username;
 
-    public PersonNameChanged(TenantId aTenantId, String aUsername, FullName aName) {
+    public PersonNameChanged(TenantId tenantId, String username, FullName name) {
         super();
 
         this.eventVersion = 1;
-        this.name = aName;
-        this.occurredOn = new Date();
-        this.tenantId = aTenantId;
-        this.username = aUsername;
+        this.name = name;
+        this.occurredOn = Instant.now();
+        this.tenantId = tenantId;
+        this.username = username;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class PersonNameChanged implements DomainEvent {
     }
 
     @Override
-    public Date occurredOn() {
+    public Instant occurredOn() {
         return this.occurredOn;
     }
 

@@ -1,23 +1,23 @@
 package de.klingbeil.hutparty.iam.domain.model.access;
 
-import java.util.Date;
+import java.time.Instant;
 
 import de.klingbeil.hutparty.domain.model.DomainEvent;
 import de.klingbeil.hutparty.iam.domain.model.identity.TenantId;
 
 public class RoleProvisioned implements DomainEvent {
 
-    private int eventVersion;
-    private String name;
-    private Date occurredOn;
-    private TenantId tenantId;
+    private final int eventVersion;
+    private final String name;
+    private final Instant occurredOn;
+    private final TenantId tenantId;
 
     public RoleProvisioned(TenantId aTenantId, String aName) {
         super();
 
         this.eventVersion = 1;
         this.name = aName;
-        this.occurredOn = new Date();
+        this.occurredOn =Instant.now();
         this.tenantId = aTenantId;
     }
 
@@ -31,7 +31,7 @@ public class RoleProvisioned implements DomainEvent {
     }
 
     @Override
-    public Date occurredOn() {
+    public Instant occurredOn() {
         return this.occurredOn;
     }
 

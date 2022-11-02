@@ -1,5 +1,6 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
+import java.io.Serial;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -7,10 +8,11 @@ import de.klingbeil.hutparty.domain.model.ConcurrencySafeEntity;
 
 public class RegistrationInvitation extends ConcurrencySafeEntity {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String description;
-    private String invitationId;
+    private InvitationId invitationId;
     private Instant startingOn;
     private TenantId tenantId;
     private Instant until;
@@ -19,7 +21,7 @@ public class RegistrationInvitation extends ConcurrencySafeEntity {
         return this.description;
     }
 
-    public String invitationId() {
+    public InvitationId invitationId() {
         return this.invitationId;
     }
 
@@ -39,10 +41,10 @@ public class RegistrationInvitation extends ConcurrencySafeEntity {
         return isAvailable;
     }
 
-    public boolean isIdentifiedBy(String anInvitationIdentifier) {
-        boolean isIdentified = this.invitationId().equals(anInvitationIdentifier);
+    public boolean isIdentifiedBy(String invitationIdentifier) {
+        boolean isIdentified = this.invitationId().id().equals(invitationIdentifier);
         if (!isIdentified && this.description() != null) {
-            isIdentified = this.description().equals(anInvitationIdentifier);
+            isIdentified = this.description().equals(invitationIdentifier);
         }
         return isIdentified;
     }
@@ -121,7 +123,7 @@ public class RegistrationInvitation extends ConcurrencySafeEntity {
 
     @Override
     public int hashCode() {
-        return +(6325 * 233)
+        return (6325 * 233)
             + this.tenantId().hashCode()
             + this.invitationId().hashCode();
     }
@@ -138,15 +140,15 @@ public class RegistrationInvitation extends ConcurrencySafeEntity {
     }
 
     protected RegistrationInvitation(
-        TenantId aTenantId,
-        String anInvitationId,
-        String aDescription) {
+        TenantId tenantId,
+        InvitationId invitationId,
+        String description) {
 
         this();
 
-        this.setDescription(aDescription);
-        this.setInvitationId(anInvitationId);
-        this.setTenantId(aTenantId);
+        this.setDescription(description);
+        this.setInvitationId(invitationId);
+        this.setTenantId(tenantId);
 
         this.assertValidInvitationDates();
     }
@@ -158,7 +160,7 @@ public class RegistrationInvitation extends ConcurrencySafeEntity {
     protected void assertValidInvitationDates() {
         // either both dates must be null, or both dates must be set
         if (this.startingOn() == null && this.until() == null) {
-            ; // valid
+            // valid
         } else if (this.startingOn() == null || this.until() == null &&
             this.startingOn() != this.until()) {
             throw new IllegalStateException("This is an invalid open-ended invitation.");
@@ -174,11 +176,8 @@ public class RegistrationInvitation extends ConcurrencySafeEntity {
         this.description = aDescription;
     }
 
-    protected void setInvitationId(String anInvitationId) {
-        this.assertArgumentNotEmpty(anInvitationId, "The invitationId is required.");
-        this.assertArgumentLength(anInvitationId, 1, 36, "The invitation id must be 36 characters or less.");
-
-        this.invitationId = anInvitationId;
+    protected void setInvitationId(InvitationId invitationId) {
+        this.invitationId = invitationId;
     }
 
     protected void setStartingOn(Instant aStartingOn) {

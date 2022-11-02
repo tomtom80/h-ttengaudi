@@ -1,11 +1,13 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import de.klingbeil.hutparty.AssertionConcern;
 
 public class PostalAddress extends AssertionConcern implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String city;
@@ -15,27 +17,27 @@ public class PostalAddress extends AssertionConcern implements Serializable {
     private String streetAddress;
 
     public PostalAddress(
-        String aStreetAddress,
-        String aCity,
-        String aStateProvince,
-        String aPostalCode,
-        String aCountryCode) {
+        String streetAddress,
+        String city,
+        String stateProvince,
+        String postalCode,
+        String countryCode) {
 
         super();
 
-        this.setCity(aCity);
-        this.setCountryCode(aCountryCode);
-        this.setPostalCode(aPostalCode);
-        this.setStateProvince(aStateProvince);
-        this.setStreetAddress(aStreetAddress);
+        this.setCity(city);
+        this.setCountryCode(countryCode);
+        this.setPostalCode(postalCode);
+        this.setStateProvince(stateProvince);
+        this.setStreetAddress(streetAddress);
     }
 
-    public PostalAddress(PostalAddress aPostalAddress) {
-        this(aPostalAddress.streetAddress(),
-            aPostalAddress.city(),
-            aPostalAddress.stateProvince(),
-            aPostalAddress.postalCode(),
-            aPostalAddress.countryCode());
+    public PostalAddress(PostalAddress postalAddress) {
+        this(postalAddress.streetAddress(),
+            postalAddress.city(),
+            postalAddress.stateProvince(),
+            postalAddress.postalCode(),
+            postalAddress.countryCode());
     }
 
     public String city() {
@@ -59,11 +61,11 @@ public class PostalAddress extends AssertionConcern implements Serializable {
     }
 
     @Override
-    public boolean equals(Object anObject) {
+    public boolean equals(Object object) {
         boolean equalObjects = false;
 
-        if (anObject != null && this.getClass() == anObject.getClass()) {
-            PostalAddress typedObject = (PostalAddress) anObject;
+        if (object != null && this.getClass() == object.getClass()) {
+            PostalAddress typedObject = (PostalAddress) object;
             equalObjects =
                 this.streetAddress().equals(typedObject.streetAddress()) &&
                     this.city().equals(typedObject.city()) &&
@@ -77,7 +79,7 @@ public class PostalAddress extends AssertionConcern implements Serializable {
 
     @Override
     public int hashCode() {
-        return +(31589 * 227)
+        return (31589 * 227)
             + this.streetAddress().hashCode()
             + this.city().hashCode()
             + this.stateProvince().hashCode()
@@ -97,38 +99,38 @@ public class PostalAddress extends AssertionConcern implements Serializable {
         super();
     }
 
-    private void setCity(String aCity) {
-        this.assertArgumentNotEmpty(aCity, "The city is required.");
-        this.assertArgumentLength(aCity, 1, 100, "The city must be 100 characters or less.");
+    private void setCity(String city) {
+        this.assertArgumentNotEmpty(city, "The city is required.");
+        this.assertArgumentLength(city, 1, 100, "The city must be 100 characters or less.");
 
-        this.city = aCity;
+        this.city = city;
     }
 
-    private void setCountryCode(String aCountryCode) {
-        this.assertArgumentNotEmpty(aCountryCode, "The country is required.");
-        this.assertArgumentLength(aCountryCode, 2, 2, "The country code must be two characters.");
+    private void setCountryCode(String countryCode) {
+        this.assertArgumentNotEmpty(countryCode, "The country is required.");
+        this.assertArgumentLength(countryCode, 2, 2, "The country code must be two characters.");
 
-        this.countryCode = aCountryCode;
+        this.countryCode = countryCode;
     }
 
-    private void setPostalCode(String aPostalCode) {
-        this.assertArgumentNotEmpty(aPostalCode, "The postal code is required.");
-        this.assertArgumentLength(aPostalCode, 5, 12, "The postal code must be 12 characters or less.");
+    private void setPostalCode(String postalCode) {
+        this.assertArgumentNotEmpty(postalCode, "The postal code is required.");
+        this.assertArgumentLength(postalCode, 5, 12, "The postal code must be 12 characters or less.");
 
-        this.postalCode = aPostalCode;
+        this.postalCode = postalCode;
     }
 
-    private void setStateProvince(String aStateProvince) {
-        this.assertArgumentNotEmpty(aStateProvince, "The state/province is required.");
-        this.assertArgumentLength(aStateProvince, 2, 100, "The state/province must be 100 characters or less.");
+    private void setStateProvince(String stateProvince) {
+        this.assertArgumentNotEmpty(stateProvince, "The state/province is required.");
+        this.assertArgumentLength(stateProvince, 2, 100, "The state/province must be 100 characters or less.");
 
-        this.stateProvince = aStateProvince;
+        this.stateProvince = stateProvince;
     }
 
-    private void setStreetAddress(String aStreetAddress) {
-        this.assertArgumentNotEmpty(aStreetAddress, "The street address is required.");
-        this.assertArgumentLength(aStreetAddress, 1, 100, "The street address must be 100 characters or less.");
+    private void setStreetAddress(String streetAddress) {
+        this.assertArgumentNotEmpty(streetAddress, "The street address is required.");
+        this.assertArgumentLength(streetAddress, 1, 100, "The street address must be 100 characters or less.");
 
-        this.streetAddress = aStreetAddress;
+        this.streetAddress = streetAddress;
     }
 }

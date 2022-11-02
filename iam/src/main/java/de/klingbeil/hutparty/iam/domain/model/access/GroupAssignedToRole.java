@@ -1,24 +1,24 @@
 package de.klingbeil.hutparty.iam.domain.model.access;
 
-import java.util.Date;
+import java.time.Instant;
 
 import de.klingbeil.hutparty.domain.model.DomainEvent;
 import de.klingbeil.hutparty.iam.domain.model.identity.TenantId;
 
 public class GroupAssignedToRole implements DomainEvent {
 
-    private int eventVersion;
-    private String groupName;
-    private Date occurredOn;
-    private String roleName;
-    private TenantId tenantId;
+    private final int eventVersion;
+    private final String groupName;
+    private final Instant occurredOn;
+    private final String roleName;
+    private final TenantId tenantId;
 
     public GroupAssignedToRole(TenantId aTenantId, String aRoleName, String aGroupName) {
         super();
 
         this.eventVersion = 1;
         this.groupName = aGroupName;
-        this.occurredOn = new Date();
+        this.occurredOn = Instant.now();
         this.roleName = aRoleName;
         this.tenantId = aTenantId;
     }
@@ -33,7 +33,7 @@ public class GroupAssignedToRole implements DomainEvent {
     }
 
     @Override
-    public Date occurredOn() {
+    public Instant occurredOn() {
         return this.occurredOn;
     }
 

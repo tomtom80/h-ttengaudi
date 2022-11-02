@@ -11,12 +11,12 @@ import de.klingbeil.hutparty.persistence.CleanableStore;
 
 public class InMemoryTenantRepository implements TenantRepository, CleanableStore {
 
-    private Map<String, Tenant> repository;
+    private final Map<String, Tenant> repository;
 
     public InMemoryTenantRepository() {
         super();
 
-        this.repository = new HashMap<String, Tenant>();
+        this.repository = new HashMap<>();
     }
 
     @Override
@@ -64,9 +64,7 @@ public class InMemoryTenantRepository implements TenantRepository, CleanableStor
     }
 
     private String keyOf(TenantId aTenantId) {
-        String key = aTenantId.getValue().toString();
-
-        return key;
+        return aTenantId.value().toString();
     }
 
     private String keyOf(Tenant aTenant) {

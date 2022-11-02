@@ -1,20 +1,19 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
-import java.util.Date;
-
+import java.time.Instant;
 
 import de.klingbeil.hutparty.domain.model.DomainEvent;
 
 public class TenantAdministratorRegistered implements DomainEvent {
 
-    private FullName administratorName;
-    private EmailAddress emailAddress;
-    private int eventVersion;
-    private Date occurredOn;
-    private String temporaryPassword;
-    private TenantId tenantId;
-    private String tenantName;
-    private String username;
+    private final FullName administratorName;
+    private final EmailAddress emailAddress;
+    private final int eventVersion;
+    private final Instant occurredOn;
+    private final String temporaryPassword;
+    private final TenantId tenantId;
+    private final String tenantName;
+    private final String username;
 
     public TenantAdministratorRegistered(
             TenantId aTenantId,
@@ -29,7 +28,7 @@ public class TenantAdministratorRegistered implements DomainEvent {
         this.administratorName = anAdministratorName;
         this.emailAddress = anEmailAddress;
         this.eventVersion = 1;
-        this.occurredOn = new Date();
+        this.occurredOn = Instant.now();
         this.temporaryPassword = aTemporaryPassword;
         this.tenantId = aTenantId;
         this.tenantName = aTenantName;
@@ -50,7 +49,7 @@ public class TenantAdministratorRegistered implements DomainEvent {
     }
 
     @Override
-    public Date occurredOn() {
+    public Instant occurredOn() {
         return this.occurredOn;
     }
 

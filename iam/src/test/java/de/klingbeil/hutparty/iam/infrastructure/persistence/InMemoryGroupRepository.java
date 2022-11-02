@@ -13,12 +13,12 @@ import de.klingbeil.hutparty.persistence.CleanableStore;
 
 public class InMemoryGroupRepository implements GroupRepository, CleanableStore {
 
-    private Map<String, Group> repository;
+    private final Map<String, Group> repository;
 
     public InMemoryGroupRepository() {
         super();
 
-        this.repository = new HashMap<String, Group>();
+        this.repository = new HashMap<>();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class InMemoryGroupRepository implements GroupRepository, CleanableStore 
 
     @Override
     public Collection<Group> allGroups(TenantId aTenantId) {
-        List<Group> groups = new ArrayList<Group>();
+        List<Group> groups = new ArrayList<>();
 
         for (Group group : this.repository().values()) {
             if (group.tenantId().equals(aTenantId)) {
@@ -69,9 +69,7 @@ public class InMemoryGroupRepository implements GroupRepository, CleanableStore 
     }
 
     private String keyOf(TenantId aTenantId, String aName) {
-        String key = aTenantId.getValue().toString() + "#" + aName;
-
-        return key;
+        return aTenantId.value().toString() + "#" + aName;
     }
 
     private String keyOf(Group aGroup) {

@@ -2,11 +2,10 @@ package de.klingbeil.hutparty.iam.domain.model;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
+import de.klingbeil.hutparty.iam.domain.model.identity.Activation;
 import de.klingbeil.hutparty.iam.domain.model.identity.ContactInformation;
 import de.klingbeil.hutparty.iam.domain.model.identity.EmailAddress;
-import de.klingbeil.hutparty.iam.domain.model.identity.Enablement;
 import de.klingbeil.hutparty.iam.domain.model.identity.FullName;
 import de.klingbeil.hutparty.iam.domain.model.identity.Person;
 import de.klingbeil.hutparty.iam.domain.model.identity.PostalAddress;
@@ -48,56 +47,45 @@ public abstract class IdentityAccessTest {
     }
 
     protected Instant dayAfterTomorrow() {
-        return this.today().plus (TWENTY_FOUR_HOURS * 2,ChronoUnit.HOURS);
+        return this.today().plus(TWENTY_FOUR_HOURS * 2, ChronoUnit.HOURS);
     }
 
     protected Instant dayBeforeYesterday() {
-        return today().minus(TWENTY_FOUR_HOURS*2, ChronoUnit.HOURS);
+        return today().minus(TWENTY_FOUR_HOURS * 2, ChronoUnit.HOURS);
     }
 
     protected Person personEntity(Tenant aTenant) {
-
-        Person person =
-            new Person(
-                aTenant.tenantId(),
-                new FullName("John", "Doe"),
-                this.contactInformation());
-
-        return person;
+        return new Person(
+            aTenant.tenantId(),
+            new FullName("John", "Doe"),
+            this.contactInformation());
     }
 
     protected Person personEntity2(Tenant aTenant) {
-
-        Person person =
-            new Person(
-                aTenant.tenantId(),
-                new FullName("Zoe", "Doe"),
-                new ContactInformation(
-                    new EmailAddress(FIXTURE_USER_EMAIL_ADDRESS2),
-                    new PostalAddress(
-                        "123 Pearl Street",
-                        "Boulder",
-                        "CO",
-                        "80301",
-                        "US"),
-                    new Telephone("303-555-1210"),
-                    new Telephone("303-555-1212")));
-
-        return person;
+        return new Person(
+            aTenant.tenantId(),
+            new FullName("Zoe", "Doe"),
+            new ContactInformation(
+                new EmailAddress(FIXTURE_USER_EMAIL_ADDRESS2),
+                new PostalAddress(
+                    "123 Pearl Street",
+                    "Boulder",
+                    "CO",
+                    "80301",
+                    "US"),
+                new Telephone("303-555-1210"),
+                new Telephone("303-555-1212")));
     }
 
-    protected RegistrationInvitation registrationInvitationEntity(Tenant aTenant) throws Exception {
+    protected RegistrationInvitation registrationInvitationEntity(Tenant aTenant)  {
 
         Instant today = Instant.now().truncatedTo(ChronoUnit.DAYS);
 
         Instant tomorrow = today.plus(TWENTY_FOUR_HOURS, ChronoUnit.HOURS);
 
-        RegistrationInvitation registrationInvitation =
-            aTenant.offerRegistrationInvitation("Today-and-Tomorrow: " + System.nanoTime())
-                .startingOn(today)
-                .until(tomorrow);
-
-        return registrationInvitation;
+        return aTenant.offerRegistrationInvitation("Today-and-Tomorrow: " + System.nanoTime())
+            .startingOn(today)
+            .until(tomorrow);
     }
 
     protected Tenant tenantAggregate() {
@@ -124,7 +112,7 @@ public abstract class IdentityAccessTest {
     }
 
     protected Instant tomorrow() {
-        return today().plus( TWENTY_FOUR_HOURS, ChronoUnit.HOURS);
+        return today().plus(TWENTY_FOUR_HOURS, ChronoUnit.HOURS);
     }
 
     protected User userAggregate() throws Exception {
@@ -133,15 +121,12 @@ public abstract class IdentityAccessTest {
         RegistrationInvitation registrationInvitation =
             this.registrationInvitationEntity(tenant);
 
-        User user =
-            tenant.registerUser(
-                registrationInvitation.invitationId(),
-                FIXTURE_USERNAME,
-                FIXTURE_PASSWORD,
-                new Enablement(true, null, null),
-                this.personEntity(tenant));
-
-        return user;
+        return tenant.registerUser(
+            registrationInvitation.invitationId(),
+            FIXTURE_USERNAME,
+            FIXTURE_PASSWORD,
+            Activation.indefiniteActivation(),
+            this.personEntity(tenant));
     }
 
     protected User userAggregate2() throws Exception {
@@ -150,15 +135,12 @@ public abstract class IdentityAccessTest {
         RegistrationInvitation registrationInvitation =
             this.registrationInvitationEntity(tenant);
 
-        User user =
-            tenant.registerUser(
-                registrationInvitation.invitationId(),
-                FIXTURE_USERNAME2,
-                FIXTURE_PASSWORD,
-                new Enablement(true, null, null),
-                this.personEntity2(tenant));
-
-        return user;
+        return tenant.registerUser(
+            registrationInvitation.invitationId(),
+            FIXTURE_USERNAME2,
+            FIXTURE_PASSWORD,
+            Activation.indefiniteActivation(),
+            this.personEntity2(tenant));
     }
 
     protected Instant yesterday() {

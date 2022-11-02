@@ -1,5 +1,6 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
@@ -7,20 +8,21 @@ import de.klingbeil.hutparty.AssertionConcern;
 
 public final class FullName extends AssertionConcern implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String firstName;
     private String lastName;
 
-    public FullName(String aFirstName, String aLastName) {
+    public FullName(String firstName, String lastName) {
         super();
 
-        this.setFirstName(aFirstName);
-        this.setLastName(aLastName);
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
     }
 
-    public FullName(FullName aFullName) {
-        this(aFullName.firstName(), aFullName.lastName());
+    public FullName(FullName fullName) {
+        this(fullName.firstName(), fullName.lastName());
     }
 
     public String asFormattedName() {
@@ -35,20 +37,20 @@ public final class FullName extends AssertionConcern implements Serializable {
         return this.lastName;
     }
 
-    public FullName withChangedFirstName(String aFirstName) {
-        return new FullName(aFirstName, this.lastName());
+    public FullName withChangedFirstName(String firstName) {
+        return new FullName(firstName, this.lastName());
     }
 
-    public FullName withChangedLastName(String aLastName) {
-        return new FullName(this.firstName(), aLastName);
+    public FullName withChangedLastName(String lastName) {
+        return new FullName(this.firstName(), lastName);
     }
 
     @Override
-    public boolean equals(Object anObject) {
+    public boolean equals(Object object) {
         boolean equalObjects = false;
 
-        if (anObject != null && this.getClass() == anObject.getClass()) {
-            FullName typedObject = (FullName) anObject;
+        if (object != null && this.getClass() == object.getClass()) {
+            FullName typedObject = (FullName) object;
             equalObjects =
                 this.firstName().equals(typedObject.firstName()) &&
                     this.lastName().equals(typedObject.lastName());
@@ -59,7 +61,7 @@ public final class FullName extends AssertionConcern implements Serializable {
 
     @Override
     public int hashCode() {
-        return +(59151 * 191)
+        return (59151 * 191)
             + this.firstName().hashCode()
             + this.lastName().hashCode();
     }
@@ -69,27 +71,27 @@ public final class FullName extends AssertionConcern implements Serializable {
         return "FullName [firstName=" + firstName + ", lastName=" + lastName + "]";
     }
 
-    protected FullName() {
+    private FullName() {
         super();
     }
 
-    private void setFirstName(String aFirstName) {
-        this.assertArgumentNotEmpty(aFirstName, "First name is required.");
-        this.assertArgumentLength(aFirstName, 1, 50, "First name must be 50 characters or less.");
+    private void setFirstName(String firstName) {
+        this.assertArgumentNotEmpty(firstName, "First name is required.");
+        this.assertArgumentLength(firstName, 1, 50, "First name must be 50 characters or less.");
         this.assertArgumentTrue(
-            Pattern.matches("[A-Z][a-z]*", aFirstName),
+            Pattern.matches("[A-Z][a-z]*", firstName),
             "First name must be at least one character in length, starting with a capital letter.");
 
-        this.firstName = aFirstName;
+        this.firstName = firstName;
     }
 
-    private void setLastName(String aLastName) {
-        this.assertArgumentNotEmpty(aLastName, "The last name is required.");
-        this.assertArgumentLength(aLastName, 1, 50, "The last name must be 50 characters or less.");
+    private void setLastName(String lastName) {
+        this.assertArgumentNotEmpty(lastName, "The last name is required.");
+        this.assertArgumentLength(lastName, 1, 50, "The last name must be 50 characters or less.");
         this.assertArgumentTrue(
-            Pattern.matches("^[a-zA-Z'][ a-zA-Z'-]*[a-zA-Z']?", aLastName),
+            Pattern.matches("^[a-zA-Z'][ a-zA-Z'-]*[a-zA-Z']?", lastName),
             "Last name must be at least one character in length.");
 
-        this.lastName = aLastName;
+        this.lastName = lastName;
     }
 }

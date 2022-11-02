@@ -1,11 +1,11 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
 
 import de.klingbeil.hutparty.domain.model.ConcurrencySafeEntity;
 import de.klingbeil.hutparty.domain.model.DomainEventPublisher;
@@ -14,6 +14,7 @@ import de.klingbeil.hutparty.iam.domain.model.access.RoleProvisioned;
 
 public class Tenant extends ConcurrencySafeEntity {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private boolean active;
@@ -22,13 +23,13 @@ public class Tenant extends ConcurrencySafeEntity {
     private Set<RegistrationInvitation> registrationInvitations;
     private TenantId tenantId;
 
-    public Tenant(TenantId aTenantId, String aName, String aDescription, boolean anActive) {
+    public Tenant(TenantId tenantId, String name, String description, boolean active) {
         this();
 
-        this.setActive(anActive);
-        this.setDescription(aDescription);
-        this.setName(aName);
-        this.setTenantId(aTenantId);
+        this.setActive(active);
+        this.setDescription(description);
+        this.setName(name);
+        this.setTenantId(tenantId);
     }
 
     protected Tenant() {
@@ -79,15 +80,15 @@ public class Tenant extends ConcurrencySafeEntity {
         return this.active;
     }
 
-    protected void setActive(boolean anActive) {
-        this.active = anActive;
+    protected void setActive(boolean active) {
+        this.active = active;
     }
 
-    public boolean isRegistrationAvailableThrough(String anInvitationIdentifier) {
+    public boolean isRegistrationAvailableThrough(String invitationIdentifier) {
         this.assertStateTrue(this.isActive(), "Tenant is not active.");
 
         RegistrationInvitation invitation =
-            this.invitation(anInvitationIdentifier);
+            this.invitation(invitationIdentifier);
 
         return invitation != null && invitation.isAvailable();
     }
@@ -96,18 +97,18 @@ public class Tenant extends ConcurrencySafeEntity {
         return this.name;
     }
 
-    public RegistrationInvitation offerRegistrationInvitation(String aDescription) {
+    public RegistrationInvitation offerRegistrationInvitation(String description) {
         this.assertStateTrue(this.isActive(), "Tenant is not active.");
 
         this.assertStateFalse(
-            this.isRegistrationAvailableThrough(aDescription),
+            this.isRegistrationAvailableThrough(description),
             "Invitation already exists.");
 
         RegistrationInvitation invitation =
             new RegistrationInvitation(
                 this.tenantId(),
-                UUID.randomUUID().toString().toUpperCase(),
-                aDescription);
+                new InvitationId(UUID.randomUUID()),
+                description);
 
         boolean added = this.registrationInvitations().add(invitation);
 
@@ -162,27 +163,27 @@ public class Tenant extends ConcurrencySafeEntity {
     }
 
     public User registerUser(
-        String anInvitationIdentifier,
-        String aUsername,
-        String aPassword,
-        Enablement anEnablement,
-        Person aPerson) {
+        InvitationId invitationIdentifier,
+        String username,
+        String password,
+        Activation activation,
+        Person person) {
 
         this.assertStateTrue(this.isActive(), "Tenant is not active.");
 
         User user = null;
 
-        if (this.isRegistrationAvailableThrough(anInvitationIdentifier)) {
+        if (this.isRegistrationAvailableThrough(invitationIdentifier.id())) {
 
             // ensure same tenant
-            aPerson.setTenantId(this.tenantId());
+            person.setTenantId(this.tenantId());
 
             user = new User(
                 this.tenantId(),
-                aUsername,
-                aPassword,
-                anEnablement,
-                aPerson);
+                username,
+                password,
+                activation,
+                person);
         }
 
         return user;
@@ -192,9 +193,9 @@ public class Tenant extends ConcurrencySafeEntity {
         return this.tenantId;
     }
 
-    public void withdrawInvitation(String anInvitationIdentifier) {
+    public void withdrawInvitation(String invitationIdentifier) {
         RegistrationInvitation invitation =
-            this.invitation(anInvitationIdentifier);
+            this.invitation(invitationIdentifier);
 
         if (invitation != null) {
             this.registrationInvitations().remove(invitation);
@@ -217,7 +218,7 @@ public class Tenant extends ConcurrencySafeEntity {
 
     @Override
     public int hashCode() {
-        return +(48123 * 257)
+        return (48123 * 257)
             + this.tenantId().hashCode()
             + this.name().hashCode();
     }
@@ -240,16 +241,16 @@ public class Tenant extends ConcurrencySafeEntity {
         return Collections.unmodifiableSet(allInvitations);
     }
 
-    protected void setDescription(String aDescription) {
-        this.assertArgumentNotEmpty(aDescription, "The tenant description is required.");
-        this.assertArgumentLength(aDescription, 1, 100, "The tenant description must be 100 characters or less.");
+    protected void setDescription(String description) {
+        this.assertArgumentNotEmpty(description, "The tenant description is required.");
+        this.assertArgumentLength(description, 1, 100, "The tenant description must be 100 characters or less.");
 
-        this.description = aDescription;
+        this.description = description;
     }
 
-    protected RegistrationInvitation invitation(String anInvitationIdentifier) {
+    protected RegistrationInvitation invitation(String invitationId) {
         for (RegistrationInvitation invitation : this.registrationInvitations()) {
-            if (invitation.isIdentifiedBy(anInvitationIdentifier)) {
+            if (invitation.isIdentifiedBy(invitationId)) {
                 return invitation;
             }
         }

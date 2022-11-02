@@ -1,10 +1,10 @@
 package de.klingbeil.hutparty.domain.model;
 
-import java.util.Date;
+import java.time.Instant;
 
 public interface DomainEvent {
 
-    public int eventVersion();
+    int eventVersion();
 
-    public Date occurredOn();
+    Instant occurredOn();
 }

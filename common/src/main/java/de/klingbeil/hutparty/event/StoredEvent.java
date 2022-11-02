@@ -1,7 +1,6 @@
 package de.klingbeil.hutparty.event;
 
-import java.util.Date;
-
+import java.time.Instant;
 
 import de.klingbeil.hutparty.AssertionConcern;
 import de.klingbeil.hutparty.domain.model.DomainEvent;
@@ -10,10 +9,10 @@ public class StoredEvent extends AssertionConcern {
 
     private String eventBody;
     private long eventId;
-    private Date occurredOn;
+    private Instant occurredOn;
     private String typeName;
 
-    public StoredEvent(String aTypeName, Date anOccurredOn, String anEventBody) {
+    public StoredEvent(String aTypeName, Instant anOccurredOn, String anEventBody) {
         this();
 
         this.setEventBody(anEventBody);
@@ -21,7 +20,7 @@ public class StoredEvent extends AssertionConcern {
         this.setTypeName(aTypeName);
     }
 
-    public StoredEvent(String aTypeName, Date anOccurredOn, String anEventBody, long anEventId) {
+    public StoredEvent(String aTypeName, Instant anOccurredOn, String anEventBody, long anEventId) {
         this(aTypeName, anOccurredOn, anEventBody);
 
         this.setEventId(anEventId);
@@ -35,13 +34,13 @@ public class StoredEvent extends AssertionConcern {
         return this.eventId;
     }
 
-    public Date occurredOn() {
+    public Instant occurredOn() {
         return this.occurredOn;
     }
 
     @SuppressWarnings("unchecked")
     public <T extends DomainEvent> T toDomainEvent() {
-        Class<T> domainEventClass = null;
+        Class<T> domainEventClass;
 
         try {
             domainEventClass = (Class<T>) Class.forName(this.typeName());
@@ -52,8 +51,8 @@ public class StoredEvent extends AssertionConcern {
         }
 
         return EventSerializer
-                .instance()
-                .deserialize(this.eventBody(), domainEventClass);
+            .instance()
+            .deserialize(this.eventBody(), domainEventClass);
     }
 
     public String typeName() {
@@ -74,7 +73,7 @@ public class StoredEvent extends AssertionConcern {
 
     @Override
     public int hashCode() {
-        return +(1237 * 233)
+        return (1237 * 233)
             + (int) this.eventId();
     }
 
@@ -101,7 +100,7 @@ public class StoredEvent extends AssertionConcern {
         this.eventId = anEventId;
     }
 
-    protected void setOccurredOn(Date anOccurredOn) {
+    protected void setOccurredOn(Instant anOccurredOn) {
         this.occurredOn = anOccurredOn;
     }
 

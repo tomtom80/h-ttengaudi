@@ -1,5 +1,6 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
@@ -7,18 +8,19 @@ import de.klingbeil.hutparty.AssertionConcern;
 
 public final class EmailAddress extends AssertionConcern implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String address;
 
-    public EmailAddress(String anAddress) {
+    public EmailAddress(String address) {
         super();
 
-        this.setAddress(anAddress);
+        this.setAddress(address);
     }
 
-    public EmailAddress(EmailAddress anEmailAddress) {
-        this(anEmailAddress.address());
+    public EmailAddress(EmailAddress emailAddress) {
+        this(emailAddress.address());
     }
 
     public String address() {
@@ -26,11 +28,11 @@ public final class EmailAddress extends AssertionConcern implements Serializable
     }
 
     @Override
-    public boolean equals(Object anObject) {
+    public boolean equals(Object object) {
         boolean equalObjects = false;
 
-        if (anObject != null && this.getClass() == anObject.getClass()) {
-            EmailAddress typedObject = (EmailAddress) anObject;
+        if (object != null && this.getClass() == object.getClass()) {
+            EmailAddress typedObject = (EmailAddress) object;
             equalObjects = this.address().equals(typedObject.address());
         }
 
@@ -39,7 +41,7 @@ public final class EmailAddress extends AssertionConcern implements Serializable
 
     @Override
     public int hashCode() {
-        return +(17861 * 179)
+        return (17861 * 179)
             + this.address().hashCode();
     }
 
@@ -52,13 +54,13 @@ public final class EmailAddress extends AssertionConcern implements Serializable
         super();
     }
 
-    private void setAddress(String anAddress) {
-        this.assertArgumentNotEmpty(anAddress, "The email address is required.");
-        this.assertArgumentLength(anAddress, 1, 100, "Email address must be 100 characters or less.");
+    private void setAddress(String address) {
+        this.assertArgumentNotEmpty(address, "The email address is required.");
+        this.assertArgumentLength(address, 1, 100, "Email address must be 100 characters or less.");
         this.assertArgumentTrue(
-            Pattern.matches("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*", anAddress),
+            Pattern.matches("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*", address),
             "Email address format is invalid.");
 
-        this.address = anAddress;
+        this.address = address;
     }
 }

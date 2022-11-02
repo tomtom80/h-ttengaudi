@@ -1,5 +1,6 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
@@ -7,18 +8,19 @@ import de.klingbeil.hutparty.AssertionConcern;
 
 public final class Telephone extends AssertionConcern implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String number;
 
-    public Telephone(String aNumber) {
+    public Telephone(String number) {
         this();
 
-        this.setNumber(aNumber);
+        this.setNumber(number);
     }
 
-    public Telephone(Telephone aTelephone) {
-        this(aTelephone.number());
+    public Telephone(Telephone telephone) {
+        this(telephone.number());
     }
 
     public String number() {
@@ -26,11 +28,11 @@ public final class Telephone extends AssertionConcern implements Serializable {
     }
 
     @Override
-    public boolean equals(Object anObject) {
+    public boolean equals(Object object) {
         boolean equalObjects = false;
 
-        if (anObject != null && this.getClass() == anObject.getClass()) {
-            Telephone typedObject = (Telephone) anObject;
+        if (object != null && this.getClass() == object.getClass()) {
+            Telephone typedObject = (Telephone) object;
             equalObjects = this.number().equals(typedObject.number());
         }
 
@@ -39,7 +41,7 @@ public final class Telephone extends AssertionConcern implements Serializable {
 
     @Override
     public int hashCode() {
-        return +(35137 * 239)
+        return (35137 * 239)
             + this.number().hashCode();
     }
 
@@ -52,13 +54,13 @@ public final class Telephone extends AssertionConcern implements Serializable {
         super();
     }
 
-    private void setNumber(String aNumber) {
-        this.assertArgumentNotEmpty(aNumber, "Telephone number is required.");
-        this.assertArgumentLength(aNumber, 5, 20, "Telephone number may not be more than 20 characters.");
+    private void setNumber(String number) {
+        this.assertArgumentNotEmpty(number, "Telephone number is required.");
+        this.assertArgumentLength(number, 5, 20, "Telephone number may not be more than 20 characters.");
         this.assertArgumentTrue(
-            Pattern.matches("((\\(\\d{3}\\))|(\\d{3}-))\\d{3}-\\d{4}", aNumber),
+            Pattern.matches("((\\(\\d{3}\\))|(\\d{3}-))\\d{3}-\\d{4}", number),
             "Telephone number or its format is invalid.");
 
-        this.number = aNumber;
+        this.number = number;
     }
 }

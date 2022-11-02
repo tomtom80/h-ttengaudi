@@ -7,40 +7,40 @@ import de.klingbeil.hutparty.AssertionConcern;
 public final class InvitationDescriptor extends AssertionConcern {
 
     private String description;
-    private String invitationId;
+    private InvitationId invitationId;
     private Instant startingOn;
     private TenantId tenantId;
     private Instant until;
 
     public InvitationDescriptor(
-        TenantId aTenantId,
-        String anInvitationId,
-        String aDescription,
-        Instant aStartingOn,
-        Instant anUntil) {
+        TenantId tenantId,
+        InvitationId invitationId,
+        String description,
+        Instant startingOn,
+        Instant until) {
 
         super();
 
-        this.setDescription(aDescription);
-        this.setInvitationId(anInvitationId);
-        this.setStartingOn(aStartingOn);
-        this.setTenantId(aTenantId);
-        this.setUntil(anUntil);
+        this.setDescription(description);
+        this.setInvitationId(invitationId);
+        this.setStartingOn(startingOn);
+        this.setTenantId(tenantId);
+        this.setUntil(until);
     }
 
-    public InvitationDescriptor(InvitationDescriptor anInvitationDescriptor) {
-        this(anInvitationDescriptor.tenantId(),
-            anInvitationDescriptor.invitationId(),
-            anInvitationDescriptor.description(),
-            anInvitationDescriptor.startingOn(),
-            anInvitationDescriptor.until());
+    public InvitationDescriptor(InvitationDescriptor invitationDescriptor) {
+        this(invitationDescriptor.tenantId(),
+            invitationDescriptor.invitationId(),
+            invitationDescriptor.description(),
+            invitationDescriptor.startingOn(),
+            invitationDescriptor.until());
     }
 
     public String description() {
         return this.description;
     }
 
-    public String invitationId() {
+    public InvitationId invitationId() {
         return this.invitationId;
     }
 
@@ -61,11 +61,11 @@ public final class InvitationDescriptor extends AssertionConcern {
     }
 
     @Override
-    public boolean equals(Object anObject) {
+    public boolean equals(Object object) {
         boolean equalObjects = false;
 
-        if (anObject != null && this.getClass() == anObject.getClass()) {
-            InvitationDescriptor typedObject = (InvitationDescriptor) anObject;
+        if (object != null && this.getClass() == object.getClass()) {
+            InvitationDescriptor typedObject = (InvitationDescriptor) object;
             equalObjects =
                 this.tenantId().equals(typedObject.tenantId()) &&
                     this.invitationId().equals(typedObject.invitationId()) &&
@@ -81,7 +81,7 @@ public final class InvitationDescriptor extends AssertionConcern {
 
     @Override
     public int hashCode() {
-        return +(23279 * 199)
+        return (23279 * 199)
             + this.tenantId().hashCode()
             + this.invitationId().hashCode()
             + this.description().hashCode()
@@ -101,29 +101,29 @@ public final class InvitationDescriptor extends AssertionConcern {
         super();
     }
 
-    private void setDescription(String aDescription) {
-        this.assertArgumentNotEmpty(aDescription, "The invitation description is required.");
+    private void setDescription(String description) {
+        this.assertArgumentNotEmpty(description, "The invitation description is required.");
 
-        this.description = aDescription;
+        this.description = description;
     }
 
-    private void setInvitationId(String anInvitationId) {
-        this.assertArgumentNotEmpty(anInvitationId, "The invitationId is required.");
+    private void setInvitationId(InvitationId invitationId) {
+        this.assertArgumentNotNull(invitationId, "The invitationId is required.");
 
-        this.invitationId = anInvitationId;
+        this.invitationId = invitationId;
     }
 
-    private void setStartingOn(Instant aStartingOn) {
-        this.startingOn = aStartingOn;
+    private void setStartingOn(Instant startingOn) {
+        this.startingOn = startingOn;
     }
 
-    private void setTenantId(TenantId aTenantId) {
-        this.assertArgumentNotNull(aTenantId, "The tenantId is required.");
+    private void setTenantId(TenantId tenantId) {
+        this.assertArgumentNotNull(tenantId, "The tenantId is required.");
 
-        this.tenantId = aTenantId;
+        this.tenantId = tenantId;
     }
 
-    private void setUntil(Instant anUntil) {
-        this.until = anUntil;
+    private void setUntil(Instant until) {
+        this.until = until;
     }
 }

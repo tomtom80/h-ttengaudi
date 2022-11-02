@@ -13,12 +13,12 @@ import de.klingbeil.hutparty.persistence.CleanableStore;
 
 public class InMemoryUserRepository implements UserRepository, CleanableStore {
 
-    private Map<String, User> repository;
+    private final Map<String, User> repository;
 
     public InMemoryUserRepository() {
         super();
 
-        this.repository = new HashMap<String, User>();
+        this.repository = new HashMap<>();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class InMemoryUserRepository implements UserRepository, CleanableStore {
         String aFirstNamePrefix,
         String aLastNamePrefix) {
 
-        Collection<User> users = new ArrayList<User>();
+        Collection<User> users = new ArrayList<>();
 
         aFirstNamePrefix = aFirstNamePrefix.toLowerCase();
         aLastNamePrefix = aLastNamePrefix.toLowerCase();
@@ -102,9 +102,7 @@ public class InMemoryUserRepository implements UserRepository, CleanableStore {
     }
 
     private String keyOf(TenantId aTenantId, String aUsername) {
-        String key = aTenantId.getValue().toString() + "#" + aUsername;
-
-        return key;
+        return aTenantId.value().toString() + "#" + aUsername;
     }
 
     private String keyOf(User aUser) {

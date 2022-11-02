@@ -1,32 +1,32 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
-import java.util.Date;
+import java.time.Instant;
 
 import de.klingbeil.hutparty.domain.model.DomainEvent;
 
 public class UserRegistered implements DomainEvent {
 
-    private EmailAddress emailAddress;
-    private int eventVersion;
-    private FullName name;
-    private Date occurredOn;
-    private TenantId tenantId;
+    private final EmailAddress emailAddress;
+    private final int eventVersion;
+    private final FullName name;
+    private final Instant occurredOn;
+    private final TenantId tenantId;
     private String username;
 
     public UserRegistered(
-        TenantId aTenantId,
-        String aUsername,
-        FullName aName,
-        EmailAddress anEmailAddress) {
+        TenantId tenantId,
+        String username,
+        FullName name,
+        EmailAddress emailAddress) {
 
         super();
 
-        this.emailAddress = anEmailAddress;
+        this.emailAddress = emailAddress;
         this.eventVersion = 1;
-        this.name = aName;
-        this.occurredOn = new Date();
-        this.tenantId = aTenantId;
-        this.username = aUsername;
+        this.name = name;
+        this.occurredOn = Instant.now();
+        this.tenantId = tenantId;
+        this.username = username;
     }
 
     public EmailAddress emailAddress() {
@@ -43,7 +43,7 @@ public class UserRegistered implements DomainEvent {
     }
 
     @Override
-    public Date occurredOn() {
+    public Instant occurredOn() {
         return this.occurredOn;
     }
 

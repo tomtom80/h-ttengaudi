@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import de.klingbeil.hutparty.iam.domain.model.access.Role;
 import de.klingbeil.hutparty.iam.domain.model.access.RoleRepository;
 import de.klingbeil.hutparty.iam.domain.model.identity.TenantId;
@@ -13,12 +12,12 @@ import de.klingbeil.hutparty.persistence.CleanableStore;
 
 public class InMemoryRoleRepository implements RoleRepository, CleanableStore {
 
-    private Map<String,Role> repository;
+    private final Map<String,Role> repository;
 
     public InMemoryRoleRepository() {
         super();
 
-        this.repository = new HashMap<String,Role>();
+        this.repository = new HashMap<>();
     }
 
     @Override
@@ -34,7 +33,7 @@ public class InMemoryRoleRepository implements RoleRepository, CleanableStore {
 
     @Override
     public Collection<Role> allRoles(TenantId aTenantId) {
-        Collection<Role> roles = new ArrayList<Role>();
+        Collection<Role> roles = new ArrayList<>();
 
         for (Role role : this.repository().values()) {
             if (role.tenantId().equals(aTenantId)) {
@@ -63,9 +62,7 @@ public class InMemoryRoleRepository implements RoleRepository, CleanableStore {
     }
 
     private String keyOf(TenantId aTenantId, String aRoleName) {
-        String key = aTenantId.getValue().toString() + "#" + aRoleName;
-
-        return key;
+        return aTenantId.value().toString() + "#" + aRoleName;
     }
 
     private String keyOf(Role aRole) {

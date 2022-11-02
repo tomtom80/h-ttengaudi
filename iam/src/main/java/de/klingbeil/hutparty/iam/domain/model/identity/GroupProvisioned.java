@@ -1,22 +1,22 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
-import java.util.Date;
+import java.time.Instant;
 
 import de.klingbeil.hutparty.domain.model.DomainEvent;
 
 public class GroupProvisioned implements DomainEvent {
 
-    private int eventVersion;
-    private String name;
-    private Date occurredOn;
-    private TenantId tenantId;
+    private final int eventVersion;
+    private final String name;
+    private final Instant occurredOn;
+    private final TenantId tenantId;
 
     public GroupProvisioned(TenantId aTenantId, String aName) {
         super();
 
         this.eventVersion = 1;
         this.name = aName;
-        this.occurredOn = new Date();
+        this.occurredOn = Instant.now();
         this.tenantId = aTenantId;
     }
 
@@ -30,7 +30,7 @@ public class GroupProvisioned implements DomainEvent {
     }
 
     @Override
-    public Date occurredOn() {
+    public Instant occurredOn() {
         return this.occurredOn;
     }
 

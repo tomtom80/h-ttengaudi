@@ -1,20 +1,20 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
-import java.util.Date;
+import java.time.Instant;
 
 import de.klingbeil.hutparty.domain.model.DomainEvent;
 
 public class TenantProvisioned implements DomainEvent {
 
-    private int eventVersion;
-    private Date occurredOn;
-    private TenantId tenantId;
+    private final int eventVersion;
+    private final Instant occurredOn;
+    private final TenantId tenantId;
 
     public TenantProvisioned(TenantId aTenantId) {
         super();
 
         this.eventVersion = 1;
-        this.occurredOn = new Date();
+        this.occurredOn = Instant.now();
         this.tenantId = aTenantId;
     }
 
@@ -24,7 +24,7 @@ public class TenantProvisioned implements DomainEvent {
     }
 
     @Override
-    public Date occurredOn() {
+    public Instant occurredOn() {
         return this.occurredOn;
     }
 
