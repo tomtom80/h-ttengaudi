@@ -24,23 +24,24 @@ public class GroupMemberService {
         return userConfirmed;
     }
 
-    public boolean isMemberGroup(Group aGroup, GroupMember aMemberGroup) {
+    public boolean isMemberGroup(Group group, GroupMember groupMember) {
         boolean isMember = false;
 
         Iterator<GroupMember> iter =
-            aGroup.groupMembers().iterator();
+            group.groupMembers().iterator();
 
         while (!isMember && iter.hasNext()) {
             GroupMember member = iter.next();
             if (member.isGroup()) {
-                if (aMemberGroup.equals(member)) {
+                if (groupMember.equals(member)) {
                     isMember = true;
                 } else {
-                    Group group =
+                    // find recursion in nested groups
+                    Group matchingGroup =
                         this.groupRepository
                             .groupNamed(member.tenantId(), member.name());
-                    if (group != null) {
-                        isMember = this.isMemberGroup(group, aMemberGroup);
+                    if (matchingGroup != null) {
+                        isMember = this.isMemberGroup(matchingGroup, groupMember);
                     }
                 }
             }

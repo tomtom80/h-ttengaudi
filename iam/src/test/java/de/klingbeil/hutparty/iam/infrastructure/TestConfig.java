@@ -9,6 +9,7 @@ import de.klingbeil.hutparty.iam.domain.model.access.AuthorizationService;
 import de.klingbeil.hutparty.iam.domain.model.access.RoleRepository;
 import de.klingbeil.hutparty.iam.domain.model.identity.AuthenticationService;
 import de.klingbeil.hutparty.iam.domain.model.identity.EncryptionService;
+import de.klingbeil.hutparty.iam.domain.model.identity.GroupMemberService;
 import de.klingbeil.hutparty.iam.domain.model.identity.GroupRepository;
 import de.klingbeil.hutparty.iam.domain.model.identity.PasswordService;
 import de.klingbeil.hutparty.iam.domain.model.identity.TenantProvisioningService;
@@ -24,6 +25,10 @@ import de.klingbeil.hutparty.iam.infrastructure.services.MD5EncryptionService;
 @TestConfiguration
 public class TestConfig {
 
+    @Bean
+    public GroupMemberService groupMemberService() {
+        return new GroupMemberService(userRepository(),groupRepository());
+    }
     @Bean
     public DomainRegistry domainRegistry() {
         return new DomainRegistry();

@@ -1,5 +1,6 @@
 package de.klingbeil.hutparty.iam.domain.model.identity;
 
+import java.io.Serial;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import de.klingbeil.hutparty.domain.model.DomainEventPublisher;
 
 public class Group extends ConcurrencySafeEntity {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public static final String ROLE_GROUP_PREFIX = "ROLE-INTERNAL-GROUP: ";
@@ -26,18 +28,18 @@ public class Group extends ConcurrencySafeEntity {
         this.setTenantId(aTenantId);
     }
 
-    public void addGroup(Group aGroup, GroupMemberService aGroupMemberService) {
-        this.assertArgumentNotNull(aGroup, "Group must not be null.");
-        this.assertArgumentEquals(this.tenantId(), aGroup.tenantId(), "Wrong tenant for this group.");
-        this.assertArgumentFalse(aGroupMemberService.isMemberGroup(aGroup, this.toGroupMember()), "Group recurrsion.");
+    public void addGroup(Group group, GroupMemberService groupMemberService) {
+        this.assertArgumentNotNull(group, "Group must not be null.");
+        this.assertArgumentEquals(this.tenantId(), group.tenantId(), "Wrong tenant for this group.");
+        this.assertArgumentFalse(groupMemberService.isMemberGroup(group, this.toGroupMember()), "Group recurrsion.");
 
-        if (this.groupMembers().add(aGroup.toGroupMember()) && !this.isInternalGroup()) {
+        if (this.groupMembers().add(group.toGroupMember()) && !this.isInternalGroup()) {
             DomainEventPublisher
                 .instance()
                 .publish(new GroupGroupAdded(
                     this.tenantId(),
                     this.name(),
-                    aGroup.name()));
+                    group.name()));
         }
     }
 
@@ -135,7 +137,7 @@ public class Group extends ConcurrencySafeEntity {
 
     @Override
     public int hashCode() {
-        return +(2061 * 193)
+        return (2061 * 193)
                 + this.tenantId().hashCode()
                 + this.name().hashCode();
     }
