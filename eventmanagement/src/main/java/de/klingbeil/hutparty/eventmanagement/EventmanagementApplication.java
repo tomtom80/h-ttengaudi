@@ -1,13 +1,13 @@
-package de.klingbeil.hutparty.hutevent;
+package de.klingbeil.hutparty.eventmanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class HuteventApplication {
+public class EventmanagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HuteventApplication.class, args);
+		SpringApplication.run(EventmanagementApplication.class, args);
 	}
 
 }

@@ -1,10 +1,10 @@
-package de.klingbeil.hutparty.hutevent;
+package de.klingbeil.hutparty.eventmanagement;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class HuteventApplicationTests {
+class EventmanagementApplicationTests {
 
 	@Test
 	void contextLoads() {
