@@ -1,4 +1,4 @@
-package de.klingbeil.hutparty.iam.domain.model.identity;
+package de.klingbeil.hutparty;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

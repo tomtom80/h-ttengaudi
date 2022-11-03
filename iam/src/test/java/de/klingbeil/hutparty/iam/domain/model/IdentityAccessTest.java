@@ -115,7 +115,7 @@ public abstract class IdentityAccessTest {
         return today().plus(TWENTY_FOUR_HOURS, ChronoUnit.HOURS);
     }
 
-    protected User userAggregate() throws Exception {
+    protected User userAggregate() {
         Tenant tenant = this.tenantAggregate();
 
         RegistrationInvitation registrationInvitation =
@@ -129,7 +129,7 @@ public abstract class IdentityAccessTest {
             this.personEntity(tenant));
     }
 
-    protected User userAggregate2() throws Exception {
+    protected User userAggregate2() {
         Tenant tenant = this.tenantAggregate();
 
         RegistrationInvitation registrationInvitation =
